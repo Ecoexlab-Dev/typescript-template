@@ -1,0 +1,14 @@
+# dependencies
+node_modules
+
+# integrity
+package-lock.json
+
+# bigfiles
+**/*.tar
+
+# secrets
+**/*.pem
+**/*.secret
+**/*.env
+!environments/example.env
