@@ -1,24 +1,22 @@
-const webpack = require('webpack');
+const { SourceMapDevToolPlugin } = require('webpack');
 const { TsconfigPathsPlugin } = require('tsconfig-paths-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
-
+const { join } = require('path');
 
 module.exports = (env) => {
 
     const { NODE_ENV } = env;
+    const mode = NODE_ENV === 'production' ? 'production' : 'development';
 
     return {
         target: 'node',
-        mode: 'none',
-        entry: { bundle: "src/main.ts" },
-        output: { path: __dirname + "/dist", filename: "[name].js" },
+        mode,
+        entry: { bundle: join(__dirname, 'src', 'main.ts') },
+        output: { path: join(__dirname, 'dist'), filename: '[name].js' },
         optimization: { minimize: false },
         resolve: {
             extensions: ['.ts', '.js'],
-            plugins: [ 
-                new TsconfigPathsPlugin({}),
-                new Dotenv({ path: `environments/${ NODE_ENV }.env` })
-            ]
+            plugins: [ new TsconfigPathsPlugin() ]
         },
         module: {
             rules: [
@@ -29,11 +27,15 @@ module.exports = (env) => {
                 }
             ]
         },
-        devtool: "inline-source-map",
+        devtool: 'inline-source-map',
         plugins: [
-            new webpack.SourceMapDevToolPlugin({
+            new SourceMapDevToolPlugin({
                 filename: '[name].js.map',
                 exclude: /^(.*?(vendor)[^$]*)$/
+            }),
+            new Dotenv({ 
+                path: join(__dirname, 'environments', `.env.${NODE_ENV}`),
+                defaults: false
             })
         ]
     }

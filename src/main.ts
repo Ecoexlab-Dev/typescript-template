@@ -1,6 +1,6 @@
 const hello = process.env.HELLO;
 
-function byPass(str: string): string {
+export function byPass(str: string): string {
     return str;
 }
 
